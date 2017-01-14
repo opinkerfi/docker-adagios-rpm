@@ -12,7 +12,7 @@ Docker image for Adagios built from rpms (Naemon-Adagios)
 docker create \ 
   --name=my-adagios \
   -p 80:80 \
-  opinkerfi/adagios-git
+  opinkerfi/adagios-rpm
 ```
 
 ## Parameters
