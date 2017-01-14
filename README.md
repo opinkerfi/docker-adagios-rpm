@@ -15,6 +15,8 @@ docker create \
   opinkerfi/adagios-rpm
 ```
 
+Log in with user `thrukadmin` and password `thrukadmin`
+
 ## Parameters
 
 The parameters are split into two halves, separated by a colon, the left hand side representing the host and the right the container side. 
