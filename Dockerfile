@@ -39,7 +39,6 @@ WORKDIR /etc/naemon
 RUN chown -R naemon:naemon /etc/naemon /etc/adagios /var/lib/adagios /var/lib/pnp4nagios /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
 # ACL group permissions need g+rwx
 RUN chmod g+rwx -R /etc/naemon /etc/adagios /var/lib/adagios /var/lib/pnp4nagios /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
-RUN setfacl -R -m group:naemon:rwx -m d:group:naemon:rwx /etc/naemon/ /etc/adagios /var/lib/adagios /var/lib/pnp4nagios  /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
 
 # Make sure nagios doesn't interfere
 RUN mkdir /etc/nagios/disabled
