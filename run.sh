@@ -47,4 +47,5 @@ do
     [[ -x "$script" ]] && "$script"
 done
 
-exec /usr/bin/supervisord -n -c /etc/supervisord.conf
+#systemctl restart httpd
+#systemctl restart naemon

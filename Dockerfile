@@ -120,26 +120,15 @@ RUN systemctl enable naemon
 #RUN pip install supervisor-quick
 
 # Remove cache and default passwd files
-RUN rm -rf /var/cache/yum /etc/nagios/passwd /etc/thruk/htpasswd
-
-# Copy supervisor config over to the container
-#COPY supervisord.conf /etc/supervisord.conf
-
-# Copy custom supervisor init.d script (for nagios start|stop)
-#COPY naemon-supervisor-wrapper.sh /usr/bin/naemon-supervisor-wrapper.sh
-#RUN sed -i 's|^\(nagios_init_script\)=\(.*\)$|\1="sudo /usr/bin/naemon-supervisor-wrapper.sh"|g' /etc/adagios/adagios.conf
-#RUN echo "naemon ALL=NOPASSWD: /usr/bin/naemon-supervisor-wrapper.sh" >> /etc/sudoers
-
-# Create childlogdir
-#RUN mkdir /var/log/supervisor
+RUN rm -rf /var/cache/yum /etc/nagios/passwd
 
 # Copy over our custom init script
 #COPY run.sh /usr/bin/run.sh
 
-# Make run.sh and supervisor wrapper script executable
-#RUN chmod 755 /usr/bin/run.sh /usr/bin/naemon-supervisor-wrapper.sh
+# Make run.sh script executable
+#RUN chmod 755 /usr/bin/run.sh
 
-#WORKDIR /etc/naemon
+WORKDIR /etc/naemon
 
 #ENTRYPOINT ["/bin/bash", "/usr/bin/run.sh"]
 
