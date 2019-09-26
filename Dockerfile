@@ -3,7 +3,7 @@
 # Based on appcontainers/nagios
 ############################################################
 
-FROM centos:latest
+FROM centos/systemd
 MAINTAINER "Gardar Thorsteinsson" <gardart@gmail.com>
 
 ENV ADAGIOS_HOST adagios.local
@@ -112,34 +112,36 @@ RUN mv /etc/httpd/conf.d/thruk_cookie_auth_vhost.conf /etc/httpd/conf.d/thruk_co
 # Redirect root URL to /adagios
 RUN echo "RedirectMatch ^/$ /adagios" > /etc/httpd/conf.d/redirect.conf
 
+RUN systemctl enable httpd
+RUN systemctl enable naemon
 # Install supervisor and supervisor-quick. Service restarts are painfully slow
 # otherwise
-RUN pip install supervisor
-RUN pip install supervisor-quick
+#RUN pip install supervisor
+#RUN pip install supervisor-quick
 
 # Remove cache and default passwd files
 RUN rm -rf /var/cache/yum /etc/nagios/passwd /etc/thruk/htpasswd
 
 # Copy supervisor config over to the container
-COPY supervisord.conf /etc/supervisord.conf
+#COPY supervisord.conf /etc/supervisord.conf
 
 # Copy custom supervisor init.d script (for nagios start|stop)
-COPY naemon-supervisor-wrapper.sh /usr/bin/naemon-supervisor-wrapper.sh
-RUN sed -i 's|^\(nagios_init_script\)=\(.*\)$|\1="sudo /usr/bin/naemon-supervisor-wrapper.sh"|g' /etc/adagios/adagios.conf
-RUN echo "naemon ALL=NOPASSWD: /usr/bin/naemon-supervisor-wrapper.sh" >> /etc/sudoers
+#COPY naemon-supervisor-wrapper.sh /usr/bin/naemon-supervisor-wrapper.sh
+#RUN sed -i 's|^\(nagios_init_script\)=\(.*\)$|\1="sudo /usr/bin/naemon-supervisor-wrapper.sh"|g' /etc/adagios/adagios.conf
+#RUN echo "naemon ALL=NOPASSWD: /usr/bin/naemon-supervisor-wrapper.sh" >> /etc/sudoers
 
 # Create childlogdir
-RUN mkdir /var/log/supervisor
+#RUN mkdir /var/log/supervisor
 
 # Copy over our custom init script
-COPY run.sh /usr/bin/run.sh
+#COPY run.sh /usr/bin/run.sh
 
 # Make run.sh and supervisor wrapper script executable
-RUN chmod 755 /usr/bin/run.sh /usr/bin/naemon-supervisor-wrapper.sh
+#RUN chmod 755 /usr/bin/run.sh /usr/bin/naemon-supervisor-wrapper.sh
 
-WORKDIR /etc/naemon
+#WORKDIR /etc/naemon
 
-ENTRYPOINT ["/bin/bash", "/usr/bin/run.sh"]
+#ENTRYPOINT ["/bin/bash", "/usr/bin/run.sh"]
 
 EXPOSE 80
 
