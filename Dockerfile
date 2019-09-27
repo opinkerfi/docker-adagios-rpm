@@ -29,11 +29,11 @@ RUN yum --enablerepo=ok-testing install -y naemon naemon-livestatus git adagios 
 # Lets make sure adagios can write to naemon configuration files, and that
 # it is a valid git repo so we have audit trail
 WORKDIR /etc/naemon
-#RUN git config user.name "admin"
-#RUN git config user.email "admin@adagios.local"
-#RUN git init /etc/naemon
-#UN git add .
-#RUN git commit -a -m "Initial commit"
+RUN git init /etc/naemon
+RUN git config user.name "admin"
+RUN git config user.email "admin@adagios.local"
+RUN git add .
+RUN git commit -a -m "Initial commit"
 
 # Fix permissions for naemon and pnp4nagios
 RUN chown -R naemon:naemon /etc/naemon /etc/adagios /var/lib/adagios /var/lib/pnp4nagios /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
@@ -109,28 +109,28 @@ RUN pynag config --append cfg_dir=/etc/naemon/commands/
 
 RUN mv /etc/httpd/conf.d/thruk_cookie_auth_vhost.conf /etc/httpd/conf.d/thruk_cookie_auth_vhost.conf.disabled
 
+RUN htpasswd -b /etc/thruk/htpasswd "$ADAGIOS_USER" "$ADAGIOS_PASS" 
+RUN rm -f /etc/nagios/passwd
+RUN ln -s /etc/thruk/htpasswd /etc/nagios/passwd
+
 # Redirect root URL to /adagios
 RUN echo "RedirectMatch ^/$ /adagios" > /etc/httpd/conf.d/redirect.conf
 
+# Fix permissions for naemon and pnp4nagios
+RUN chown -R naemon:naemon /etc/naemon /etc/adagios /var/lib/adagios /var/lib/pnp4nagios /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
+# ACL group permissions need g+rwx
+RUN chmod g+rwx -R /etc/naemon /etc/adagios /var/lib/adagios /var/lib/pnp4nagios /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
+RUN setfacl -R -m group:naemon:rwx -m d:group:naemon:rwx /etc/naemon/ /etc/adagios /var/lib/adagios /var/lib/pnp4nagios  /var/log/pnp4nagios /var/spool/pnp4nagios /etc/pnp4nagios/process_perfdata.cfg /var/log/okconfig
+
+# Enable services
 RUN systemctl enable httpd
 RUN systemctl enable naemon
-# Install supervisor and supervisor-quick. Service restarts are painfully slow
-# otherwise
-#RUN pip install supervisor
-#RUN pip install supervisor-quick
+RUN systemctl enable npcd
 
-# Remove cache and default passwd files
-RUN rm -rf /var/cache/yum /etc/nagios/passwd
-
-# Copy over our custom init script
-#COPY run.sh /usr/bin/run.sh
-
-# Make run.sh script executable
-#RUN chmod 755 /usr/bin/run.sh
+# Remove yum cache
+RUN rm -rf /var/cache/yum
 
 WORKDIR /etc/naemon
-
-#ENTRYPOINT ["/bin/bash", "/usr/bin/run.sh"]
 
 EXPOSE 80
 
