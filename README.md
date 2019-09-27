@@ -17,6 +17,18 @@ docker create \
 
 Log in with user `thrukadmin` and password `thrukadmin`
 
+## Building
+
+```
+git clone https://github.com/opinkerfi/docker-adagios-rpm.git
+cd docker-adagios-rpm
+docker build -t adagios_systemd_image .
+docker run --cap-add=SYS_ADMIN --name adagios  -v /sys/fs/cgroup:/sys/fs/cgroup -p 8080:80 -d adagios_systemd_image
+```
+
+Then you should be able to access http://localhost:8080
+Log in with user `thrukadmin` and password `thrukadmin`
+
 ## Parameters
 
 The parameters are split into two halves, separated by a colon, the left hand side representing the host and the right the container side. 
