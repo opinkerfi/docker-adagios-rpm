@@ -9,7 +9,7 @@ Docker image for Adagios built from rpms (Naemon-Adagios)
 ## Usage
 
 ```
-docker create \ 
+docker create \
   --name=my-adagios \
   -p 80:80 \
   opinkerfi/adagios-rpm
