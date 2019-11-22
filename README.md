@@ -19,15 +19,17 @@ Log in with user `thrukadmin` and password `thrukadmin`
 
 ## Building
 
+### Docker
 ```
 git clone https://github.com/opinkerfi/docker-adagios-rpm.git
 cd docker-adagios-rpm
 docker build -t adagios_systemd_image .
 docker run --cap-add=SYS_ADMIN --name adagios  -v /sys/fs/cgroup:/sys/fs/cgroup -p 8080:80 -d adagios_systemd_image
 ```
-
+### Podman
 ```shell
-# If SELinux is enabled on your system, you must turn on the container_manage_cgroup boolean to run containers with systemd 
+# If SELinux is enabled on your system, you must turn on the container_manage_cgroup boolean 
+# to run containers with systemd 
 setsebool -P container_manage_cgroup on
 git clone https://github.com/opinkerfi/docker-adagios-rpm.git
 cd docker-adagios-rpm
