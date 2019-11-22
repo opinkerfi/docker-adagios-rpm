@@ -136,3 +136,5 @@ EXPOSE 80
 
 VOLUME ["/etc/naemon", "/var/log/naemon"]
 CMD ["/usr/sbin/init"]
+
+HEALTHCHECK --interval=2m --timeout=3s CMD curl -f http://localhost:80/ || exit 1
