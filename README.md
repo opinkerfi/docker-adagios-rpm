@@ -37,6 +37,20 @@ podman build -t adagios_systemd_image .
 podman run --name adagios -p 8080:80 -d adagios_systemd_image
 ```
 
+#### Running podman container from systemd
+See [RUNNING CONTAINERS AS SYSTEMD SERVICES WITH PODMAN](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/managing_containers/running_containers_as_systemd_services_with_podman)
+```ini
+[Unit]
+Description=Adagios container
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/podman start -a adagios
+ExecStop=/usr/bin/podman stop -t 2 adagios
+
+[Install]
+WantedBy=local.target
+```
 Then you should be able to access http://localhost:8080
 Log in with user `thrukadmin` and password `thrukadmin`
 
